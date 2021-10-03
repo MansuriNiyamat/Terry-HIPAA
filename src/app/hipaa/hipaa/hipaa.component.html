@@ -1,0 +1,76 @@
+<nz-card [nzTitle]="title" [nzExtra]="extraTemplate">
+    <nz-table #basicTable [nzData]="listData">
+        <thead>
+            <tr>
+                <th>STATUS</th>
+                <th>HIPAA SIGNED</th>
+                <th>HIPAA EXPIRES</th>
+                <th>ATTACH / VIEW</th>
+                <th>EDIT / DELETE</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let data of basicTable.data">
+                <td>{{ data.status  }}</td>
+                <td>{{ data.signed | date }}</td>
+                <td>{{ data.expires  | date}}</td>
+                <td>
+                    <button nz-button nzType="default" nzSize="medium" nz-tooltip nzTooltipPlacement="left"
+                        nzTooltipTitle="Attach">
+                        <i nz-icon nzType="paper-clip"></i>
+                    </button>
+                    <nz-divider nzType="vertical"></nz-divider>
+                    <button nz-button nzType="default" nzSize="medium" nz-tooltip nzTooltipPlacement="left"
+                        nzTooltipTitle="View">
+                        <i nz-icon nzType="eye"></i>
+                    </button>
+                </td>
+                <td>
+                    <button nz-button nzType="default" nzSize="medium" nz-tooltip nzTooltipPlacement="left" (click)="editRecord(data.id)"
+                        nzTooltipTitle="Edit">
+                        <i nz-icon nzType="edit"></i>
+                    </button>
+                    <nz-divider nzType="vertical"></nz-divider>
+                    <button nz-button nzType="default" nzSize="medium" nz-tooltip nzTooltipPlacement="left" (click)="deleteRecord(data.id)"
+                        nzTooltipTitle="Delete">
+                        <i nz-icon nzType="delete"></i>
+                    </button>
+                </td>
+            </tr>
+        </tbody>
+    </nz-table>
+  
+</nz-card>
+{{listData | json}}
+<ng-template #extraTemplate>
+    <button nz-button nzType="primary" nzSize="large" nzShape="circle" nz-tooltip nzTooltipPlacement="left"
+        (click)="createRecord()" nzTooltipTitle="Create">
+        <i nz-icon nzType="plus"></i>
+    </button>
+</ng-template>
+
+<nz-modal [(nzVisible)]="isVisible" [nzTitle]="modalTitle" (nzOnCancel)="handleCancel()" [nzContent]="modalContent"  [nzFooter]="modalFooter"
+    >
+    <ng-template #modalTitle>{{modTitle}}</ng-template>
+    <ng-template #modalContent>
+
+        <form nz-form [formGroup]="inForm">
+            <nz-form-item>
+                <nz-form-label nzRequired>SIGNED </nz-form-label>
+                <nz-form-control [nzSpan]="12" nzErrorTip="Please input your Signed Date">
+                    <nz-date-picker formControlName="signed"></nz-date-picker>
+                </nz-form-control>
+            </nz-form-item>
+            <nz-form-item>
+                <nz-form-label nzRequired>EXPIRES</nz-form-label>
+                <nz-form-control [nzSpan]="12" nzErrorTip="Please input your Expires Date">
+                    <nz-date-picker formControlName="expires"></nz-date-picker>
+                </nz-form-control>
+            </nz-form-item>
+        </form>
+    </ng-template>
+    <ng-template #modalFooter>
+        <button nz-button nzType="default" (click)="handleCancel()">Cancel</button>
+        <button nz-button nzType="primary" [disabled]="!inForm.valid" (click)="submitForm()">Save</button>
+      </ng-template>
+</nz-modal>

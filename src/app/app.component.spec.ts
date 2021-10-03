@@ -20,16 +20,16 @@ describe('AppComponent', () => {
     expect(app).toBeTruthy();
   });
 
-  it(`should have as title 'Terry-HIPAA'`, () => {
+  it(`should have as title 'Teryy-HIPAA'`, () => {
     const fixture = TestBed.createComponent(AppComponent);
     const app = fixture.componentInstance;
-    expect(app.title).toEqual('Terry-HIPAA');
+    expect(app.title).toEqual('Teryy-HIPAA');
   });
 
   it('should render title', () => {
     const fixture = TestBed.createComponent(AppComponent);
     fixture.detectChanges();
     const compiled = fixture.nativeElement;
-    expect(compiled.querySelector('.content span').textContent).toContain('Terry-HIPAA app is running!');
+    expect(compiled.querySelector('.content span').textContent).toContain('Teryy-HIPAA app is running!');
   });
 });
