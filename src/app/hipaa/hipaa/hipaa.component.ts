@@ -7,17 +7,25 @@ import { NzModalService } from 'ng-zorro-antd/modal';
   templateUrl: './hipaa.component.html',
   styleUrls: ['./hipaa.component.scss']
 })
-export class HipaaComponent implements OnInit {
+export class HipaaComponent {
   inForm: FormGroup;
   title = 'HIPAA';
   modTitle = '';
   id = undefined;
   listData = [];
   isVisible = false;
+
+  // url for dummy image
+  previewImage = 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png';;
+  previewVisible = false;
+
+  // Expires date validation
+  disabledDate = (current: Date): boolean => current < new Date();
+
   constructor(private fb: FormBuilder, private modal: NzModalService) {
   }
-  ngOnInit(): void {
-  }
+
+  // create / Add record
   createRecord(): void {
     this.modTitle = 'Add New HIPAA Consent';
     this.loadForm({signed: undefined, expires: undefined});
@@ -27,6 +35,7 @@ export class HipaaComponent implements OnInit {
     this.isVisible = false;
   }
 
+  // load form for Add / Edit records
   loadForm(data): void {
     this.inForm = this.fb.group({
       signed: [data.signed, [Validators.required]],
@@ -36,6 +45,7 @@ export class HipaaComponent implements OnInit {
     this.isVisible = true;
   }
 
+  // submit form for add / edit records
   submitForm(): void {
     const formData = this.inForm.value;
     const obj = { status: formData.status, signed: formData.signed, expires: formData.expires };
@@ -50,6 +60,7 @@ export class HipaaComponent implements OnInit {
     this.isVisible = false;
   }
 
+  // edit record
   editRecord(id): void {
     this.id = id;
     this.modTitle = 'Edit HIPAA Consent';
@@ -57,6 +68,7 @@ export class HipaaComponent implements OnInit {
     this.loadForm(data);
   }
 
+  // delete record
   deleteRecord(id): void {
     this.modal.confirm({
       nzTitle: '<i>Do you Want to delete this item?</i>',
@@ -64,5 +76,9 @@ export class HipaaComponent implements OnInit {
         this.listData = this.listData.filter(d => d.id !== id);
       }
     });
+  }
+
+  handlePreview(): void {
+    this.previewVisible = true;
   }
 }

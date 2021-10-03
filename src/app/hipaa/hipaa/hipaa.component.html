@@ -1,4 +1,5 @@
 <nz-card [nzTitle]="title" [nzExtra]="extraTemplate">
+    <!-- Table -->
     <nz-table #basicTable [nzData]="listData">
         <thead>
             <tr>
@@ -15,33 +16,42 @@
                 <td>{{ data.signed | date }}</td>
                 <td>{{ data.expires  | date}}</td>
                 <td>
-                    <button nz-button nzType="default" nzSize="medium" nz-tooltip nzTooltipPlacement="left"
-                        nzTooltipTitle="Attach">
-                        <i nz-icon nzType="paper-clip"></i>
-                    </button>
+                    <nz-upload nzAction="#" [nzShowUploadList]="false" [nzPreview]="handlePreview">
+                        <button nz-button nzType="default" nzSize="medium" nz-tooltip nzTooltipPlacement="left"
+                            nzTooltipTitle="Attach">
+                            <i nz-icon nzType="paper-clip"></i>
+                        </button>
+                    </nz-upload>
                     <nz-divider nzType="vertical"></nz-divider>
                     <button nz-button nzType="default" nzSize="medium" nz-tooltip nzTooltipPlacement="left"
-                        nzTooltipTitle="View">
+                        (click)="handlePreview()" nzTooltipTitle="View">
                         <i nz-icon nzType="eye"></i>
                     </button>
                 </td>
                 <td>
-                    <button nz-button nzType="default" nzSize="medium" nz-tooltip nzTooltipPlacement="left" (click)="editRecord(data.id)"
-                        nzTooltipTitle="Edit">
+                    <button nz-button nzType="default" nzSize="medium" nz-tooltip nzTooltipPlacement="left"
+                        (click)="editRecord(data.id)" nzTooltipTitle="Edit">
                         <i nz-icon nzType="edit"></i>
                     </button>
                     <nz-divider nzType="vertical"></nz-divider>
-                    <button nz-button nzType="default" nzSize="medium" nz-tooltip nzTooltipPlacement="left" (click)="deleteRecord(data.id)"
-                        nzTooltipTitle="Delete">
+                    <button nz-button nzType="default" nzSize="medium" nz-tooltip nzTooltipPlacement="left"
+                        (click)="deleteRecord(data.id)" nzTooltipTitle="Delete">
                         <i nz-icon nzType="delete"></i>
                     </button>
                 </td>
             </tr>
         </tbody>
     </nz-table>
-  
+
 </nz-card>
-{{listData | json}}
+<!-- Image preview  -->
+<nz-modal [(nzVisible)]="previewVisible" [nzContent]="modalContent1" [nzFooter]="null"
+    (nzOnCancel)="previewVisible = false">
+    <ng-template #modalContent1>
+        <img [src]="previewImage" [ngStyle]="{ width: '100%' }" />
+    </ng-template>
+</nz-modal>
+
 <ng-template #extraTemplate>
     <button nz-button nzType="primary" nzSize="large" nzShape="circle" nz-tooltip nzTooltipPlacement="left"
         (click)="createRecord()" nzTooltipTitle="Create">
@@ -49,8 +59,9 @@
     </button>
 </ng-template>
 
-<nz-modal [(nzVisible)]="isVisible" [nzTitle]="modalTitle" (nzOnCancel)="handleCancel()" [nzContent]="modalContent"  [nzFooter]="modalFooter"
-    >
+<!-- Input form modal -->
+<nz-modal [(nzVisible)]="isVisible" [nzTitle]="modalTitle" (nzOnCancel)="handleCancel()" [nzContent]="modalContent"
+    [nzFooter]="modalFooter">
     <ng-template #modalTitle>{{modTitle}}</ng-template>
     <ng-template #modalContent>
 
@@ -58,13 +69,13 @@
             <nz-form-item>
                 <nz-form-label nzRequired>SIGNED </nz-form-label>
                 <nz-form-control [nzSpan]="12" nzErrorTip="Please input your Signed Date">
-                    <nz-date-picker formControlName="signed"></nz-date-picker>
+                    <nz-date-picker formControlName="signed" nzFormat='MM/dd/yyyy' ></nz-date-picker>
                 </nz-form-control>
             </nz-form-item>
             <nz-form-item>
                 <nz-form-label nzRequired>EXPIRES</nz-form-label>
                 <nz-form-control [nzSpan]="12" nzErrorTip="Please input your Expires Date">
-                    <nz-date-picker formControlName="expires"></nz-date-picker>
+                    <nz-date-picker formControlName="expires" nzFormat='MM/dd/yyyy' [nzDisabledDate]="disabledDate"></nz-date-picker>
                 </nz-form-control>
             </nz-form-item>
         </form>
@@ -72,5 +83,7 @@
     <ng-template #modalFooter>
         <button nz-button nzType="default" (click)="handleCancel()">Cancel</button>
         <button nz-button nzType="primary" [disabled]="!inForm.valid" (click)="submitForm()">Save</button>
-      </ng-template>
+    </ng-template>
 </nz-modal>
+
+
